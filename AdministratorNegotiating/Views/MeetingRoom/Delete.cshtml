@@ -1,0 +1,77 @@
+﻿@model AdministratorNegotiating.Models.MeetingRoom
+
+@{
+    Layout = null;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <!-- Заголовок модального окна -->
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">Удалить</h4>
+        </div>
+        <!-- Основное содержимое модального окна -->
+        <div class="modal-body">
+            <h3>Вы уверены, что хотите удалить переговорную?</h3>
+            <div>
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CountOfChairs)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CountOfChairs)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IsBoard)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.IsBoard)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IsProjector)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.IsProjector)
+                    </dd>
+
+                </dl>
+
+
+            </div>
+        </div>
+        <!-- Футер модального окна -->
+        <div class="modal-footer">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    @Html.ActionLink("Закрыть", "Index", null, new { @class = "btn btn-default", @id = "closemodal" })
+                    <input type="submit" value="Сохранить изменения" class="btn btn-primary" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#closemodal").click(function () {
+            $("#myModalBox").modal("hide");
+            return false;
+        });
+    });
+</script>
