@@ -9,6 +9,11 @@ namespace AdministratorNegotiating.Models
 {
     public class MeetingRoom
     {
+        public MeetingRoom()
+        {
+            this.Meetings = new HashSet<Meeting>();
+        }
+
         public int Id { get; set; }
 
         private int countOfChairs;
@@ -18,7 +23,7 @@ namespace AdministratorNegotiating.Models
         [DisplayName("Название переговорной")]
         public string Name { get; set; }
 
-        public List<Meeting> Meetings { get; set; }
+        public virtual ICollection<Meeting> Meetings { get; set; }
 
         [Required]
         [DisplayName("Колчество сидячих мест")]

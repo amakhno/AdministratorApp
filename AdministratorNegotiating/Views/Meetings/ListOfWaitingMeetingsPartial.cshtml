@@ -1,0 +1,79 @@
+﻿@model IEnumerable<AdministratorNegotiating.Models.Meeting>
+
+<div id="waitingTable">
+    <h4>Таблица ожидания</h4>
+
+    <p>
+        @Ajax.ActionLink("Обновить", "ListOfWaitingMeetingsPartial", null, new AjaxOptions { UpdateTargetId = "waitingTable" }, new { @id = "refresh" })
+    </p>
+
+    <table class="table table-striped">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MeetingRoom.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DayOfBooking)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NameOfMeeting)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BeginTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>Действия</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr class="info">
+                <td>
+                    @Html.DisplayFor(modelItem => item.MeetingRoom.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DayOfBooking)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameOfMeeting)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BeginTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.ActionLink("Подтвердить", "Confirm", new { id = item.Id }, new { @class = "confirm" }) |
+                    @Html.ActionLink("Отклонить", "Reject", new { id = item.Id }, new { @class = "reject" })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".confirm").click(function () {
+            $(this).parents("tr").removeClass("info").addClass("success").hide(1000);
+        });
+
+        $(".reject").click(function () {
+            $(this).parents("tr").removeClass("info").addClass("danger").hide(1000);
+            return false;
+        });      
+        var timerId = setInterval(function () {
+            clearInterval(timerId);
+            $("#refresh").click();
+        }, 5000);
+    });
+</script>

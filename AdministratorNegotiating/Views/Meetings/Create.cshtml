@@ -2,13 +2,19 @@
 
 @Styles.Render("~/Content/datetime")
 
+@{
+    ViewBag.Title = "Создание встречи";
+}
+<h2>Создание</h2>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Meeting</h4>
         <hr />
+        @{ 
+            string error = (ViewBag.Error == null)?"": ViewBag.Error.ToString();
+        }
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
@@ -22,7 +28,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BeginTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.BeginTime, new { htmlAttributes = new { @class = "form-control datetimepicker" } })
+                @Html.EditorFor(model => model.BeginTime, new { htmlAttributes = new { @class = "form-control datetimepicker1" } })
                 @Html.ValidationMessageFor(model => model.BeginTime, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -30,16 +36,16 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EndTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control datetimepicker" } })
+                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control datetimepicker2" } })
                 @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.MeetingRoomId, "MeetingRoomId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MeetingRoomId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("MeetingRoomId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.MeetingRoomId, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.MeetingRoomId, error, new { @class = "text-danger" })
             </div>
         </div>
 
@@ -62,10 +68,26 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
 <script>
     $(function () {
-        $('.datetimepicker').datetimepicker({
+        $('.form_datetime').datetimepicker();
+
+        $('.datetimepicker1').datetimepicker({
+            //language:  'ru',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startDate: "2013-02-14 10:00",
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+
+        $('.datetimepicker2').datetimepicker({
             //language:  'ru',
             weekStart: 1,
             todayBtn: 1,

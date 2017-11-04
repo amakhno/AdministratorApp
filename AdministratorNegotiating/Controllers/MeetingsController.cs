@@ -7,12 +7,21 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AdministratorNegotiating.Models;
+using AdministratorNegotiating.Models.Repositories.Interfaces;
 
 namespace AdministratorNegotiating.Controllers
 {
+    [Authorize]
     public class MeetingsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        ApplicationDbContext db = new ApplicationDbContext();
+
+        readonly IMeetingsRepository _mdb;
+
+        public MeetingsController(IMeetingsRepository db)
+        {
+            _mdb = db;
+        }
 
         // GET: Meetings
         public ActionResult Index()
@@ -50,47 +59,32 @@ namespace AdministratorNegotiating.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,DayOfBooking,NameOfMeeting,BeginTime,EndTime,MeetingRoomId,UserName,Status")] Meeting meeting)
         {
+            meeting.DayOfBooking = DateTime.Now;
+            meeting.UserName = User.Identity.Name;
+
+            bool isAllowed = true;
+            ViewBag.Error = "";
+            var meetingRoom = db.MeetingRooms.Find(meeting.MeetingRoomId);
+
+            if (meetingRoom == null)
+            {
+                isAllowed = false;
+                ViewBag.Error = "Комната с таким Id не найдена";
+            }
+
+            if (!_mdb.isAllow(meeting.MeetingRoomId, meeting.BeginTime, meeting.EndTime))
+            {
+                isAllowed = false;
+                ViewBag.Error = "Комната занята в это время";
+            }
             
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && isAllowed)
             {
                 db.Meetings.Add(meeting);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms, "Id", "Name", meeting.MeetingRoomId);
-            return View(meeting);
-        }
-
-        // GET: Meetings/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Meeting meeting = db.Meetings.Find(id);
-            if (meeting == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms, "Id", "Name", meeting.MeetingRoomId);
-            return View(meeting);
-        }
-
-        // POST: Meetings/Edit/5
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,DayOfBooking,NameOfMeeting,BeginTime,EndTime,MeetingRoomId,UserName,Status")] Meeting meeting)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(meeting).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
             ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms, "Id", "Name", meeting.MeetingRoomId);
             return View(meeting);
         }
@@ -102,12 +96,18 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Meeting meeting = db.Meetings.Find(id);
+            Meeting meeting = _mdb.GetById((int)id);
             if (meeting == null)
             {
                 return HttpNotFound();
             }
             return View(meeting);
+        }
+
+        public ActionResult ListOfWaitingMeetingsPartial()
+        {
+            List<Meeting> meetings = _mdb.ListOfWaitingMeetings();
+            return PartialView(meetings);
         }
 
         // POST: Meetings/Delete/5
@@ -128,6 +128,12 @@ namespace AdministratorNegotiating.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult Confirm(int id)
+        {
+            _mdb.Confirm(id);
+            return RedirectToAction("Index");
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using AdministratorNegotiating.Migrations;
 using AdministratorNegotiating.Models;
+using Autofac;
+using Autofac.Core;
+using Autofac.Integration.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -16,6 +19,8 @@ namespace AdministratorNegotiating
     {
         protected void Application_Start()
         {
+            AdministratorNegotiating.Models.AutofacConfig.ConfigureContainer();
+
             //InitializeDatabase(new Models.ApplicationDbContext());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
