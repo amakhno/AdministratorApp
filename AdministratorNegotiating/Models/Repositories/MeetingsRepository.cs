@@ -74,6 +74,27 @@ namespace AdministratorNegotiating.Models.Repositories
             return list;
         }
 
+        public List<Meeting> ListOfAcrhive()
+        {
+            List<Meeting> list = new List<Meeting>();
+            Run(contex =>
+            {
+                list = contex.Meetings.Include(m => m.MeetingRoom).Where(x => (x.Status == Meeting.StatusTypes.Rejected || x.Status == Meeting.StatusTypes.Ended)).
+                    OrderByDescending(x=>x.DayOfBooking).ToList();
+            });
+            return list;
+        }
+
+        public List<Meeting> ListOfInProcess()
+        {
+            List<Meeting> list = new List<Meeting>();
+            Run(contex =>
+            {
+                list = contex.Meetings.Include(m => m.MeetingRoom).Where(x => (x.Status == Meeting.StatusTypes.Confirmed)).ToList();
+            });
+            return list;
+        }
+
         public void Confirm(int id)
         {
             Run(contex =>
@@ -81,6 +102,50 @@ namespace AdministratorNegotiating.Models.Repositories
                 var meeting = contex.Meetings.Find(id);
                 meeting.Status = Meeting.StatusTypes.Confirmed;
                 contex.Entry(meeting).State = EntityState.Modified;
+                contex.SaveChanges();
+            });
+        }
+
+        public void Reject(int id)
+        {
+            Run(contex =>
+            {
+                var meeting = contex.Meetings.Find(id);
+                meeting.Status = Meeting.StatusTypes.Rejected;
+                contex.Entry(meeting).State = EntityState.Modified;
+                contex.SaveChanges();
+            });
+        }
+
+        public void UpdateStatuses()
+        {
+            Run(contex =>
+            {
+                var meetings = contex.Meetings.Where(x => (x.EndTime < DateTime.Now && x.Status != Meeting.StatusTypes.Rejected));
+                foreach (Meeting meeting in meetings)
+                {
+                    meeting.Status = Meeting.StatusTypes.Ended;
+                    contex.Entry(meeting).State = EntityState.Modified;
+                }
+                contex.SaveChanges();
+            });
+        }
+
+        public void DeleteById(int id)
+        {
+            Run(contex =>
+            {
+                Meeting meeting = contex.Meetings.Find(id);
+                contex.Meetings.Remove(meeting);
+                contex.SaveChanges();
+            });
+        }
+
+        public void Add(Meeting meeting)
+        {
+            Run(contex => 
+            {
+                contex.Meetings.Add(meeting);
                 contex.SaveChanges();
             });
         }

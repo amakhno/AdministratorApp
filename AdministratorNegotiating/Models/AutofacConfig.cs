@@ -22,6 +22,7 @@ namespace AdministratorNegotiating.Models
 
             // регистрируем споставление типов
             builder.RegisterType<MeetingsRepository>().As<IMeetingsRepository>();
+            //builder.RegisterType<UserManagerRepository>().As<IUserManagerRepository>();
 
             // создаем новый контейнер с теми зависимостями, которые определены выше
             var container = builder.Build();

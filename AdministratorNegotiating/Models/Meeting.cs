@@ -88,6 +88,7 @@ namespace AdministratorNegotiating.Models
         public virtual ApplicationUser User { get; set; }
 
         //[ForeignKey("User")]
+        [DisplayName("Создатель")]
         public string UserName { get; set; }
 
         [Required]

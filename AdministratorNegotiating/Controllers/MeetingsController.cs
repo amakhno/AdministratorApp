@@ -14,8 +14,6 @@ namespace AdministratorNegotiating.Controllers
     [Authorize]
     public class MeetingsController : Controller
     {
-        ApplicationDbContext db = new ApplicationDbContext();
-
         readonly IMeetingsRepository _mdb;
 
         public MeetingsController(IMeetingsRepository db)
@@ -26,8 +24,7 @@ namespace AdministratorNegotiating.Controllers
         // GET: Meetings
         public ActionResult Index()
         {
-            var meetings = db.Meetings.Include(m => m.MeetingRoom);
-            return View(meetings.ToList());
+            return View();
         }
 
         // GET: Meetings/Details/5
@@ -37,7 +34,7 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Meeting meeting = db.Meetings.Find(id);
+            Meeting meeting = _mdb.GetById((int)id);
             if (meeting == null)
             {
                 return HttpNotFound();
@@ -48,7 +45,10 @@ namespace AdministratorNegotiating.Controllers
         // GET: Meetings/Create
         public ActionResult Create()
         {
-            ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms, "Id", "Name");
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms.ToList(), "Id", "Name");
+            }
             return View();
         }
 
@@ -64,28 +64,23 @@ namespace AdministratorNegotiating.Controllers
 
             bool isAllowed = true;
             ViewBag.Error = "";
-            var meetingRoom = db.MeetingRooms.Find(meeting.MeetingRoomId);
-
-            if (meetingRoom == null)
-            {
-                isAllowed = false;
-                ViewBag.Error = "Комната с таким Id не найдена";
-            }
 
             if (!_mdb.isAllow(meeting.MeetingRoomId, meeting.BeginTime, meeting.EndTime))
             {
                 isAllowed = false;
                 ViewBag.Error = "Комната занята в это время";
             }
-            
+
             if (ModelState.IsValid && isAllowed)
             {
-                db.Meetings.Add(meeting);
-                db.SaveChanges();
+                _mdb.Add(meeting);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms, "Id", "Name", meeting.MeetingRoomId);
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms.ToList(), "Id", "Name", meeting.MeetingRoomId);
+            }
             return View(meeting);
         }
 
@@ -106,7 +101,20 @@ namespace AdministratorNegotiating.Controllers
 
         public ActionResult ListOfWaitingMeetingsPartial()
         {
+            _mdb.UpdateStatuses();
             List<Meeting> meetings = _mdb.ListOfWaitingMeetings();
+            return PartialView(meetings);
+        }
+
+        public ActionResult ListOfArchivePartial()
+        {
+            List<Meeting> meetings = _mdb.ListOfAcrhive();
+            return PartialView(meetings);
+        }
+
+        public ActionResult ListOfInProcessPartial()
+        {
+            List<Meeting> meetings = _mdb.ListOfInProcess();
             return PartialView(meetings);
         }
 
@@ -115,24 +123,27 @@ namespace AdministratorNegotiating.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Meeting meeting = db.Meetings.Find(id);
-            db.Meetings.Remove(meeting);
-            db.SaveChanges();
+            _mdb.DeleteById(id);
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
+        public ActionResult Confirm(int? id)
         {
-            if (disposing)
+            if (id == null)
             {
-                db.Dispose();
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            base.Dispose(disposing);
+            _mdb.Confirm((int)id);
+            return RedirectToAction("Index");
         }
 
-        public ActionResult Confirm(int id)
+        public ActionResult Reject(int? id)
         {
-            _mdb.Confirm(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            _mdb.Reject((int)id);
             return RedirectToAction("Index");
         }
     }

@@ -1,13 +1,6 @@
 ﻿@model IEnumerable<AdministratorNegotiating.Models.Meeting>
-
-<div id="waitingTable">
-    <h4>Таблица ожидания</h4>
-
-    <p>
-            @Ajax.ActionLink("Обновить", "ListOfWaitingMeetingsPartial", null, new AjaxOptions { UpdateTargetId = "waitingTable" }, new { @id = "refresh", @class="btn btn-default" })
-        
-    </p>
-
+<div id="archiveTable">
+    <h4>Разрешенные</h4>
     <table class="table table-striped">
         <tr>
             <th>
@@ -28,12 +21,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
-            <th>Действия</th>
         </tr>
 
         @foreach (var item in Model)
         {
-            <tr class="info">
+            <tr class="success">
                 <td>
                     @Html.DisplayFor(modelItem => item.MeetingRoom.Name)
                 </td>
@@ -52,28 +44,8 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
-                <td>
-                    @Html.ActionLink("Подтвердить", "Confirm", new { id = item.Id }, new { @class = "confirm" }) |
-                    @Html.ActionLink("Отклонить", "Reject", new { id = item.Id }, new { @class = "reject" })
-                </td>
             </tr>
         }
 
     </table>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $(".confirm").click(function () {
-            $(this).parents("tr").removeClass("info").addClass("success").hide(1000);
-        });
-
-        $(".reject").click(function () {
-            $(this).parents("tr").removeClass("info").addClass("danger").hide(1000);
-        });
-        var timerId = setInterval(function () {
-            clearInterval(timerId);
-            $("#refresh").click();
-        }, 10000);
-    });
-</script>
