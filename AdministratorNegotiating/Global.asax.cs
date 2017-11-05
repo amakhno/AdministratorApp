@@ -23,6 +23,7 @@ namespace AdministratorNegotiating
             AdministratorNegotiating.Models.AutofacConfig.ConfigureContainer();
 
             //InitializeDatabase(new Models.ApplicationDbContext());
+            GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

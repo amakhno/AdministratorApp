@@ -21,5 +21,15 @@ namespace AdministratorNegotiating.Models.Repositories
                 dbAction(userManager);
             }
         }
+
+        protected bool RunBool(Func<ApplicationDbContext, bool> dbAction)
+        {
+            bool result;
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                result = dbAction(db);
+            }
+            return result;
+        }
     }
 }

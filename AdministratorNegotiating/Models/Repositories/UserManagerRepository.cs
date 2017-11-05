@@ -1,4 +1,5 @@
 ﻿using AdministratorNegotiating.Models.Repositories.Interfaces;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +11,20 @@ namespace AdministratorNegotiating.Models.Repositories
     {
         public bool Login(string name, string hashPassword)
         {
-            bool result = false;
-            Run(context => 
+            PasswordHasher a = new PasswordHasher();
+           
+            bool result = RunBool((context) => 
             {
                 if (context.Users.Where(x => x.UserName == name).Count() == 0)
                 {
-                    result = false;
-                    return;
+                    return false;
                 }
                 var user = context.Users.First(x=>x.UserName == name);
-                if (user.PasswordHash == hashPassword)
+                if (a.VerifyHashedPassword(user.PasswordHash, hashPassword) == PasswordVerificationResult.Success)
                 {
-                    result = true;
-                    return;
+                    return true;                    
                 }
+                return false;
             });
             return result;
         }
