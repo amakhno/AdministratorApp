@@ -231,8 +231,11 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginApiController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MeetingRoomApiController.cs" />
     <Compile Include="Controllers\MeetingRoomController.cs" />
     <Compile Include="Controllers\MeetingsController.cs" />
+    <Compile Include="Controllers\MyMeetingsApiController.cs" />
+    <Compile Include="Controllers\TimeApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -283,6 +286,14 @@
     <Compile Include="Migrations\201711041428063_after.cs" />
     <Compile Include="Migrations\201711041428063_after.Designer.cs">
       <DependentUpon>201711041428063_after.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711061534411_password.cs" />
+    <Compile Include="Migrations\201711061534411_password.Designer.cs">
+      <DependentUpon>201711061534411_password.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711061537031_passworddeleted.cs" />
+    <Compile Include="Migrations\201711061537031_passworddeleted.Designer.cs">
+      <DependentUpon>201711061537031_passworddeleted.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -434,6 +445,7 @@
     <Content Include="Views\Meetings\ListOfWaitingMeetingsPartial.cshtml" />
     <Content Include="Views\Meetings\ListOfArchivePartial.cshtml" />
     <Content Include="Views\Meetings\ListOfInProcessPartial.cshtml" />
+    <Content Include="Views\Account\RegisterNewUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -478,6 +490,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711041428063_after.resx">
       <DependentUpon>201711041428063_after.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711061534411_password.resx">
+      <DependentUpon>201711061534411_password.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711061537031_passworddeleted.resx">
+      <DependentUpon>201711061537031_passworddeleted.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

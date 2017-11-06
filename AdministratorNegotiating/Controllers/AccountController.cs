@@ -135,7 +135,7 @@ namespace AdministratorNegotiating.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrators")]
         public ActionResult Register()
         {
             return View();
@@ -144,7 +144,7 @@ namespace AdministratorNegotiating.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrators")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
@@ -420,6 +420,40 @@ namespace AdministratorNegotiating.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        [Authorize(Roles = "Administrators")]
+        public ActionResult RegisterNewUser()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Account/Register
+        [HttpPost]
+        [Authorize(Roles = "Administrators")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterNewUser(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    // Дополнительные сведения о том, как включить подтверждение учетной записи и сброс пароля, см. по адресу: http://go.microsoft.com/fwlink/?LinkID=320771
+                    // Отправка сообщения электронной почты с этой ссылкой
+                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Подтверждение учетной записи", "Подтвердите вашу учетную запись, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
+
+                    return RedirectToAction("Index", "Home");
+                }
+                AddErrors(result);
+            }
+
+            // Появление этого сообщения означает наличие ошибки; повторное отображение формы
+            return View(model);
         }
 
         #region Вспомогательные приложения

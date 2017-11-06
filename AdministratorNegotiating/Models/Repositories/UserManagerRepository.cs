@@ -12,19 +12,23 @@ namespace AdministratorNegotiating.Models.Repositories
         public bool Login(string name, string hashPassword)
         {
             PasswordHasher a = new PasswordHasher();
-           
-            bool result = RunBool((context) => 
+
+            bool result = false;
+            RunWithUpdateStatuses((context) => 
             {
                 if (context.Users.Where(x => x.UserName == name).Count() == 0)
                 {
-                    return false;
+                    result = false;
+                    return;
                 }
                 var user = context.Users.First(x=>x.UserName == name);
                 if (a.VerifyHashedPassword(user.PasswordHash, hashPassword) == PasswordVerificationResult.Success)
                 {
-                    return true;                    
+                    result = true;
+                    return;
                 }
-                return false;
+                result = false;
+                return;
             });
             return result;
         }

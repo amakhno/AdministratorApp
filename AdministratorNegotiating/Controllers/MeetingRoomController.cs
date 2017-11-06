@@ -7,17 +7,23 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AdministratorNegotiating.Models;
+using AdministratorNegotiating.Models.Repositories.Interfaces;
 
 namespace AdministratorNegotiating.Controllers
 {
     public class MeetingRoomController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IMeetingsRepository _mdb;
+
+        public MeetingRoomController(IMeetingsRepository mdb)
+        {
+            _mdb = mdb;
+        }
 
         // GET: MeetingRooms
         public ActionResult Index()
         {
-            return View(db.MeetingRooms.ToList());
+            return View(_mdb.GetAllRooms());
         }
 
         // GET: MeetingRooms/Details/5
@@ -27,7 +33,7 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MeetingRoom meetingRoom = db.MeetingRooms.Find(id);
+            MeetingRoom meetingRoom = _mdb.GetMeetingRoomById((int)id);
             if (meetingRoom == null)
             {
                 return HttpNotFound();
@@ -54,8 +60,7 @@ namespace AdministratorNegotiating.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.MeetingRooms.Add(meetingRoom);
-                db.SaveChanges();
+                _mdb.AddMeetingRoom(meetingRoom);
                 return RedirectToAction("Index");
             }
             return View(meetingRoom);
@@ -68,7 +73,7 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MeetingRoom meetingRoom = db.MeetingRooms.Find(id);
+            MeetingRoom meetingRoom = _mdb.GetMeetingRoomById((int)id);
             if (meetingRoom == null)
             {
                 return HttpNotFound();
@@ -85,8 +90,7 @@ namespace AdministratorNegotiating.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(meetingRoom).State = EntityState.Modified;
-                db.SaveChanges();
+                _mdb.UpdateMeetingRoom(meetingRoom);
                 return RedirectToAction("Index");
             }
             return View(meetingRoom);
@@ -99,7 +103,7 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MeetingRoom meetingRoom = db.MeetingRooms.Find(id);
+            MeetingRoom meetingRoom = _mdb.GetMeetingRoomById((int)id);
             if (meetingRoom == null)
             {
                 return HttpNotFound();
@@ -116,19 +120,9 @@ namespace AdministratorNegotiating.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            MeetingRoom meetingRoom = db.MeetingRooms.Find(id);
-            db.MeetingRooms.Remove(meetingRoom);
-            db.SaveChanges();
+            MeetingRoom meetingRoom = _mdb.GetMeetingRoomById(id);
+            _mdb.RemoveMeetingRoom(meetingRoom);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

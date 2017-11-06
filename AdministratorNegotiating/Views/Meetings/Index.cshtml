@@ -6,17 +6,16 @@
 
 <h2>@ViewBag.Title</h2>
 
-
 @Html.Action("ListOfWaitingMeetingsPartial", "Meetings")
 @Html.Action("ListOfInProcessPartial", "Meetings")
 @Html.Action("ListOfArchivePartial", "Meetings")
 
-<hr/>
+<hr />
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Добавить новую", "Create")
 </p>
 
-    <!-- HTML-код модального окна -->
+<!-- HTML-код модального окна -->
 <div id="myModalBox" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -37,6 +36,9 @@
         </div>
     </div>
 </div>
+<p>
+    @Html.ActionLink("Список переговорных", "Index", "MeetingRoom", null, new { @class = "btn btn-default" })
+</p>
 
 <!-- Скрипт, вызывающий модальное окно после загрузки страницы -->
 <script>

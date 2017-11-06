@@ -11,14 +11,14 @@ using AdministratorNegotiating.Models.Repositories.Interfaces;
 
 namespace AdministratorNegotiating.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrators")]
     public class MeetingsController : Controller
     {
         readonly IMeetingsRepository _mdb;
 
-        public MeetingsController(IMeetingsRepository db)
+        public MeetingsController(IMeetingsRepository mdb)
         {
-            _mdb = db;
+            _mdb = mdb;
         }
 
         // GET: Meetings
@@ -45,10 +45,7 @@ namespace AdministratorNegotiating.Controllers
         // GET: Meetings/Create
         public ActionResult Create()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms.ToList(), "Id", "Name");
-            }
+            ViewBag.MeetingRoomId = new SelectList(_mdb.GetAllRooms(), "Id", "Name");
             return View();
         }
 
@@ -77,10 +74,8 @@ namespace AdministratorNegotiating.Controllers
                 return RedirectToAction("Index");
             }
 
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                ViewBag.MeetingRoomId = new SelectList(db.MeetingRooms.ToList(), "Id", "Name", meeting.MeetingRoomId);
-            }
+            ViewBag.MeetingRoomId = new SelectList(_mdb.GetAllRooms(), "Id", "Name", meeting.MeetingRoomId);
+
             return View(meeting);
         }
 
@@ -101,7 +96,6 @@ namespace AdministratorNegotiating.Controllers
 
         public ActionResult ListOfWaitingMeetingsPartial()
         {
-            _mdb.UpdateStatuses();
             List<Meeting> meetings = _mdb.ListOfWaitingMeetings();
             return PartialView(meetings);
         }
@@ -134,7 +128,7 @@ namespace AdministratorNegotiating.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             _mdb.Confirm((int)id);
-            return RedirectToAction("Index");
+            return null;//RedirectToAction("Index");
         }
 
         public ActionResult Reject(int? id)
@@ -144,7 +138,7 @@ namespace AdministratorNegotiating.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             _mdb.Reject((int)id);
-            return RedirectToAction("Index");
+            return null;// RedirectToAction("Index");
         }
     }
 }

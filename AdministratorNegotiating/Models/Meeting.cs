@@ -98,7 +98,6 @@ namespace AdministratorNegotiating.Models
         { 
             Confirmed, 
             Rejected,
-            InProcess,
             Ended,
             Waiting
         }
