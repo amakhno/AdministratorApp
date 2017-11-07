@@ -10,20 +10,15 @@ using System.Web.Http.Cors;
 namespace AdministratorNegotiating.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class TimeApiController : ApiController
+    public class GetMeetingsTimesApiController : ApiController
     {
         private IUserManagerRepository _udb;
         private IMeetingsRepository _mdb;
 
-        public TimeApiController(IUserManagerRepository udb, IMeetingsRepository mbd)
+        public GetMeetingsTimesApiController(IUserManagerRepository udb, IMeetingsRepository mbd)
         {
             _udb = udb;
             _mdb = mbd;
-        }
-        // GET: api/TimeApi
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
         }
 
         // GET: api/TimeApi/5
@@ -37,21 +32,6 @@ namespace AdministratorNegotiating.Controllers
             {
                 return "error";
             }
-        }
-
-        // POST: api/TimeApi
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT: api/TimeApi/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/TimeApi/5
-        public void Delete(int id)
-        {
         }
     }
 }

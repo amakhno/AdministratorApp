@@ -190,9 +190,10 @@ namespace AdministratorNegotiating.Models.Repositories
             string stringResult = "";
             RunWithUpdateStatuses(context =>
             {
-                foreach (Meeting mr in context.Meetings.Where(x => x.UserName == username).Where(x => x.Status != Meeting.StatusTypes.Ended).Where(x => x.Status != Meeting.StatusTypes.Rejected))
+                foreach (Meeting mr in context.Meetings.Where(x => x.UserName == username).Where(x => x.Status != Meeting.StatusTypes.Ended).Where(x => x.Status != Meeting.StatusTypes.Rejected).Include(x=>x.MeetingRoom))
                 {
                     stringResult += mr.NameOfMeeting + "|";
+                    stringResult += mr.MeetingRoom.Name + "|";
                     stringResult += mr.BeginTime.ToString("MM.dd.yyyy HH:mm") + "|";
                     stringResult += mr.EndTime.ToString("MM.dd.yyyy HH:mm") + "|";
                     stringResult += mr.Status.ToString() + "|";
