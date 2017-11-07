@@ -447,6 +447,7 @@
     <Content Include="Views\Meetings\ListOfArchivePartial.cshtml" />
     <Content Include="Views\Meetings\ListOfInProcessPartial.cshtml" />
     <Content Include="Views\Account\RegisterNewUser.cshtml" />
+    <Content Include="Views\Meetings\TablesPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

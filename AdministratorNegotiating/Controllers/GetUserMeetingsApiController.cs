@@ -22,7 +22,7 @@ namespace AdministratorNegotiating.Controllers
         }
 
         // GET: api/MyMeetingsApi/5
-        public string Get(string username, string password)
+        public string[] Get(string username, string password)
         {
             if (_udb.Login(username, password))
             {
@@ -30,7 +30,7 @@ namespace AdministratorNegotiating.Controllers
             }
             else
             {
-                return "error";
+                return new string[] { "error" };
             }
         }
     }

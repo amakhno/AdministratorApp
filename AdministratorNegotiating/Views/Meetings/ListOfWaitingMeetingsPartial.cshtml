@@ -53,8 +53,8 @@
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
                 <td>
-                    @Ajax.ActionLink("Подтвердить", "Confirm", new { id = item.Id }, new AjaxOptions { }, new { @class = "confirm" }) |
-                    @Ajax.ActionLink("Отклонить", "Reject", new { id = item.Id }, new AjaxOptions { },new { @class = "reject" })
+                    @Ajax.ActionLink("Подтвердить", "Confirm", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "tables" }, new { @class = "confirm" }) |
+                    @Ajax.ActionLink("Отклонить", "Reject", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "tables" },new { @class = "reject" })
                 </td>
             </tr>
         }
@@ -65,13 +65,13 @@
 <script>
     $(document).ready(function () {
         $(".confirm").click(function (e) {
+            clearInterval(timerId);
             $(this).parents("tr").removeClass("info").addClass("success").hide(1000);
-            e.preventDefault();
         });
 
         $(".reject").click(function (e) {
+            clearInterval(timerId);
             $(this).parents("tr").removeClass("info").addClass("danger").hide(1000);
-            e.preventDefault();
         });
 
         $("#refresh").click(function () {

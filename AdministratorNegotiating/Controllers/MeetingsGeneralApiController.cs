@@ -24,7 +24,7 @@ namespace AdministratorNegotiating.Controllers
         // GET: api/MeetingRoomApi
         [System.Web.Http.AcceptVerbs("GET", "POST")]
         [System.Web.Http.HttpGet]
-        public string Get(string username, string password)
+        public string[] Get(string username, string password)
         {
             if (_udb.Login(username, password))
             {
@@ -32,7 +32,7 @@ namespace AdministratorNegotiating.Controllers
             }
             else
             {
-                return "error";
+                return new string[] { "error" };
             }
         }
 

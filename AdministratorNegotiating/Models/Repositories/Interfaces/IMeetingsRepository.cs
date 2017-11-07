@@ -17,9 +17,9 @@ namespace AdministratorNegotiating.Models.Repositories.Interfaces
         void Reject(int id);
         void DeleteById(int id);
         void Add(Meeting meeting);
-        string GetTimeInfo(int id);
-        string GetUserListInfo();
-        string GetByUserName(string username);
+        string[] GetTimeInfo(int id);
+        string[] GetUserListInfo();
+        string[] GetByUserName(string username);
         List<MeetingRoom> GetAllRooms();
         MeetingRoom GetMeetingRoomById(int id);
         void AddMeetingRoom(MeetingRoom meetingRoom);

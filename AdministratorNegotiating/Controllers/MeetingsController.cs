@@ -91,7 +91,7 @@ namespace AdministratorNegotiating.Controllers
             {
                 return HttpNotFound();
             }
-            return View(meeting);
+            return PartialView(meeting);
         }
 
         public ActionResult ListOfWaitingMeetingsPartial()
@@ -118,7 +118,7 @@ namespace AdministratorNegotiating.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             _mdb.DeleteById(id);
-            return RedirectToAction("Index");
+            return PartialView("TablesPartial");
         }
 
         public ActionResult Confirm(int? id)
@@ -128,7 +128,7 @@ namespace AdministratorNegotiating.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             _mdb.Confirm((int)id);
-            return null;//RedirectToAction("Index");
+            return PartialView("TablesPartial");//RedirectToAction("Index");
         }
 
         public ActionResult Reject(int? id)
@@ -138,7 +138,7 @@ namespace AdministratorNegotiating.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             _mdb.Reject((int)id);
-            return null;// RedirectToAction("Index");
+            return PartialView("TablesPartial"); // RedirectToAction("Index");
         }
     }
 }

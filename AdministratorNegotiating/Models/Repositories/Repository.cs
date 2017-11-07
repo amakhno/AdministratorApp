@@ -12,6 +12,7 @@ namespace AdministratorNegotiating.Models.Repositories
         {
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
+                DeleteOldMeetings(db);
                 UpdateStatuses(db);
                 dbAction(db);
             }
@@ -34,6 +35,17 @@ namespace AdministratorNegotiating.Models.Repositories
                     contex.Entry(meeting).State = EntityState.Modified;
                 }
                 contex.SaveChanges();
+        }
+
+        private void DeleteOldMeetings(ApplicationDbContext contex)
+        {
+            DateTime chckDate = DateTime.Now.AddMonths(-1);
+            var meetings = contex.Meetings.Where(x => (x.EndTime < chckDate));
+            foreach (Meeting meeting in meetings)
+            {
+                contex.Entry(meeting).State = EntityState.Deleted;
+            }
+            contex.SaveChanges();
         }
 
         protected void RunUser(Action<UserManager<ApplicationUser>> dbAction)

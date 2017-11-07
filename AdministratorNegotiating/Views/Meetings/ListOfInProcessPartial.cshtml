@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<AdministratorNegotiating.Models.Meeting>
-<div id="archiveTable">
+<div id="processTable">
     <h4>Разрешенные</h4>
     <table class="table table-striped">
         <tr>
@@ -21,6 +21,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
+            <th></th>
         </tr>
 
         @foreach (var item in Model)
@@ -44,8 +45,22 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
+                <td>
+                    @Ajax.ActionLink(" ", "Delete", "Meetings", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "myModalBox" }, new { @class = "glyphicon glyphicon-trash delete" })
+                </td>
             </tr>
         }
 
     </table>
 </div>
+
+<!-- HTML-код модального окна -->
+<div id="myModalBox" class="modal"></div>
+
+<script>
+    $(document).ready(function () {
+        $("#processTable").on("click", ".delete", function () {
+            $("#myModalBox").fadeIn();
+        });
+    });
+</script>

@@ -22,7 +22,7 @@ namespace AdministratorNegotiating.Controllers
         }
 
         // GET: api/TimeApi/5
-        public string Get(int id, string username, string password)
+        public string[] Get(int id, string username, string password)
         {
             if (_udb.Login(username, password))
             {
@@ -30,7 +30,7 @@ namespace AdministratorNegotiating.Controllers
             }
             else
             {
-                return "error";
+                return new string[] { "error" };
             }
         }
     }

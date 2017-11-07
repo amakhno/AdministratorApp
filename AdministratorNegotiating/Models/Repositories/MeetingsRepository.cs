@@ -18,7 +18,7 @@ namespace AdministratorNegotiating.Models.Repositories
             IEnumerable<Meeting> meetings = null;
             RunWithUpdateStatuses(contex =>
             {
-                meetings = contex.Meetings.ToArray();
+                meetings = contex.Meetings.OrderByDescending(x=>x.DayOfBooking).ToArray();
             });
             return meetings;
         }
@@ -70,7 +70,8 @@ namespace AdministratorNegotiating.Models.Repositories
             List<Meeting> list = new List<Meeting>();
             RunWithUpdateStatuses(contex =>
             {
-                list = contex.Meetings.Include(m => m.MeetingRoom).Where(x => x.Status == Meeting.StatusTypes.Waiting ).ToList();
+                list = contex.Meetings.Include(m => m.MeetingRoom).Where(x => x.Status == Meeting.StatusTypes.Waiting )
+                    .OrderByDescending(x => x.DayOfBooking).ToList();
             });
             return list;
         }
@@ -91,7 +92,8 @@ namespace AdministratorNegotiating.Models.Repositories
             List<Meeting> list = new List<Meeting>();
             RunWithUpdateStatuses(contex =>
             {
-                list = contex.Meetings.Include(m => m.MeetingRoom).Where(x => (x.Status == Meeting.StatusTypes.Confirmed)).ToList();
+                list = contex.Meetings.Include(m => m.MeetingRoom).Where(x => (x.Status == Meeting.StatusTypes.Confirmed))
+                    .OrderByDescending(x => x.DayOfBooking).ToList();
             });
             return list;
         }
@@ -137,73 +139,66 @@ namespace AdministratorNegotiating.Models.Repositories
             });
         }
 
-        public string GetUserListInfo()
+        public string[] GetUserListInfo()
         {
-            string stringResult = "";
+            List<string> stringResult = new List<string>();
             RunWithUpdateStatuses(context =>
             {
                 var result = context.MeetingRooms.ToArray();
                 foreach (MeetingRoom mr in result)
                 {
-                    stringResult += mr.Id + "|";
-                    stringResult += mr.Name + "|";
-                    stringResult += mr.CountOfChairs + "|";
-                    stringResult += mr.IsProjector.ToString().ToLower() + "|";
-                    stringResult += mr.IsBoard.ToString().ToLower() + "|";
+                    stringResult.Add(mr.Id.ToString());
+                    stringResult.Add(mr.Name);
+                    stringResult.Add(mr.CountOfChairs.ToString());
+                    stringResult.Add(mr.IsProjector.ToString().ToLower());
+                    stringResult.Add(mr.IsBoard.ToString().ToLower());
                     if (context.Meetings.Where(x => x.MeetingRoomId == mr.Id).Where(x => x.Status != Meeting.StatusTypes.Ended)
                         .Where(x => x.Status != Meeting.StatusTypes.Rejected)
                         .Count() == 0)
                     {
-                        stringResult += "free" + "|";
+                        stringResult.Add("Свободна");
                     }
                     else
                     {
-                        stringResult += context.Meetings.Where(x => x.MeetingRoomId == mr.Id).Where(x => x.Status != Meeting.StatusTypes.Ended)
-                        .Where(x => x.Status != Meeting.StatusTypes.Rejected).Min(x => x.BeginTime).ToString("MM.dd.yyyy HH:mm") + "|";
+                        stringResult.Add(context.Meetings.Where(x => x.MeetingRoomId == mr.Id).Where(x => x.Status != Meeting.StatusTypes.Ended)
+                        .Where(x => x.Status != Meeting.StatusTypes.Rejected).Min(x => x.BeginTime).ToString());
                     }
                 }
-                stringResult = stringResult.Remove(stringResult.Length - 1);
             });
-            return stringResult;
+            return stringResult.ToArray();
         }
-        public string GetTimeInfo(int id)
+        public string[] GetTimeInfo(int id)
         {
-            string stringResult = "";
+            List<string> stringResult = new List<string>();
             RunWithUpdateStatuses(context =>
             {
-                foreach (Meeting mr in context.Meetings.Where(x=>x.MeetingRoomId == id).Where(x=>x.Status != Meeting.StatusTypes.Ended).Where(x => x.Status != Meeting.StatusTypes.Rejected))
+                foreach (Meeting mr in context.Meetings.Where(x=>x.MeetingRoomId == id).Where(x=>x.Status != Meeting.StatusTypes.Ended)
+                    .Where(x => x.Status != Meeting.StatusTypes.Rejected).OrderByDescending(x => x.DayOfBooking))
                 {
-                    stringResult += mr.NameOfMeeting + "|";
-                    stringResult += mr.BeginTime.ToString("MM.dd.yyyy HH:mm") + "|";
-                    stringResult += mr.EndTime.ToString("MM.dd.yyyy HH:mm") + "|";
+                    stringResult.Add(mr.NameOfMeeting);
+                    stringResult.Add(mr.BeginTime.ToString());
+                    stringResult.Add(mr.EndTime.ToString());
                 }
             });
-            if (stringResult != "")
-            {
-                stringResult = stringResult.Remove(stringResult.Length - 1);
-            }
-            return stringResult;
+            return stringResult.ToArray();
         }
 
-        public string GetByUserName(string username)
+        public string[] GetByUserName(string username)
         {
-            string stringResult = "";
+            List<string> stringResult = new List<string>();
             RunWithUpdateStatuses(context =>
             {
-                foreach (Meeting mr in context.Meetings.Where(x => x.UserName == username).Where(x => x.Status != Meeting.StatusTypes.Ended).Where(x => x.Status != Meeting.StatusTypes.Rejected).Include(x=>x.MeetingRoom))
+                foreach (Meeting mr in context.Meetings.Where(x => x.UserName == username).Where(x => x.Status != Meeting.StatusTypes.Ended)
+                    .Where(x => x.Status != Meeting.StatusTypes.Rejected).Include(x=>x.MeetingRoom).OrderByDescending(x => x.DayOfBooking))
                 {
-                    stringResult += mr.NameOfMeeting + "|";
-                    stringResult += mr.MeetingRoom.Name + "|";
-                    stringResult += mr.BeginTime.ToString("MM.dd.yyyy HH:mm") + "|";
-                    stringResult += mr.EndTime.ToString("MM.dd.yyyy HH:mm") + "|";
-                    stringResult += mr.Status.ToString() + "|";
+                    stringResult.Add(mr.NameOfMeeting);
+                    stringResult.Add(mr.MeetingRoom.Name);
+                    stringResult.Add(mr.BeginTime.ToString());//ToString("MM.dd.yyyy HH:mm") + "|";
+                    stringResult.Add(mr.EndTime.ToString());//.ToString("MM.dd.yyyy HH:mm") + "|";
+                    stringResult.Add(mr.Status.ToString());
                 }
             });
-            if (stringResult != "")
-            {
-                stringResult = stringResult.Remove(stringResult.Length - 1);
-            }
-            return stringResult;
+            return stringResult.ToArray();
         }
 
         public List<MeetingRoom> GetAllRooms()
