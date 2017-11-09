@@ -46,7 +46,7 @@
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
                 <td>
-                    @Ajax.ActionLink(" ", "Delete", "Meetings", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "myModalBox" }, new { @class = "glyphicon glyphicon-trash delete" })
+                    @Ajax.ActionLink(" ", "Delete", "Meetings", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "myModalBox" }, new { @class = "glyphicon glyphicon-trash delete", @style="text-decoration:none" })
                 </td>
             </tr>
         }

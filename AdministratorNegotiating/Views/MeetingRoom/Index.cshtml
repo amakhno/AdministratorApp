@@ -23,34 +23,45 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CountOfChairs)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsBoard)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsProjector)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id } , new { @id = "editbutton" }) |  
-            @Ajax.ActionLink("Details", "Details", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "myModalBox" }, new { @id = "detailsbutton" }) |
-            @Ajax.ActionLink("Delete", "Delete", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "myModalBox" }, new { @id = "deletebutton" })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CountOfChairs)
+            </td>
+            @if (item.IsBoard == true)
+            {
+                <td><span class="glyphicon glyphicon-check"></span></td>
+            }
+            else
+            {
+                <td><span class="glyphicon glyphicon-unchecked"></span></td>
+            }
+            @if (item.IsProjector == true)
+            {
+                <td><span class="glyphicon glyphicon-check"></span></td>
+            }
+            else
+            {
+                <td><span class="glyphicon glyphicon-unchecked"></span></td>
+            }
+            <td>
+                @Html.ActionLink("Редактировать", "Edit", new { id = item.Id }, new { @id = "editbutton" }) |
+                @Ajax.ActionLink("Инфо", "Details", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "myModalBox" }, new { @id = "detailsbutton" }) |
+                @Ajax.ActionLink("Удалить", "Delete", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "myModalBox" }, new { @id = "deletebutton" })
+            </td>
+        </tr>
+    }
 </table>
 <p>
     @Html.ActionLink("Назад к встречам", "Index", "Meetings", null, new { @class = "btn btn-default" })
     @Html.ActionLink("Создать новую", "Create", null, new { @class = "btn btn-default" })
 </p>
 
-    <!-- HTML-код модального окна -->
+<!-- HTML-код модального окна -->
 <div id="myModalBox" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
