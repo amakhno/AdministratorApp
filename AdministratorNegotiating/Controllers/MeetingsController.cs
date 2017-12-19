@@ -54,7 +54,7 @@ namespace AdministratorNegotiating.Controllers
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,DayOfBooking,NameOfMeeting,BeginTime,EndTime,MeetingRoomId,UserName,Status")] Meeting meeting)
+        public ActionResult Create(Meeting meeting)
         {
             meeting.DayOfBooking = DateTime.Now;
             meeting.UserName = User.Identity.Name;
