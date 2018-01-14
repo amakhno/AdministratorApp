@@ -9,7 +9,7 @@ namespace AdministratorNegotiating.Models
     {
         public Meeting2(MeetingAdminViewModel viewModel)
         {
-            if (viewModel.BeginTime)
+            //if (viewModel.BeginTime)
         }
 
         public int Id { get; protected set; }

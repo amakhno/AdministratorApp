@@ -8,7 +8,7 @@ namespace AdministratorNegotiating.Services
 {
     public class MeetingService
     {
-        public AddOrUpdateMeeting(MeetingAdminViewModel viewModel)
+        public void AddOrUpdateMeeting(MeetingAdminViewModel viewModel)
         {
             if (viewModel.Id == 0)
             {
