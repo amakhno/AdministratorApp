@@ -9,7 +9,6 @@ using System.Web.Http.Cors;
 
 namespace AdministratorNegotiating.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class GetMeetingsTimesApiController : ApiController
     {
         private IUserManagerRepository _udb;

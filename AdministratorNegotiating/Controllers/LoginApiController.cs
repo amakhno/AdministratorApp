@@ -6,7 +6,6 @@ using System.Web.Http.Cors;
 
 namespace AdministratorNegotiating.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class LoginApiController : ApiController
     {
         private IUserManagerRepository _udb;

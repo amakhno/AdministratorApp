@@ -317,9 +317,11 @@
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Repositories\Interfaces\IMeetingsRepository.cs" />
     <Compile Include="Models\Repositories\Interfaces\IUserManagerRepository.cs" />
+    <Compile Include="Models\Repositories\MeetingRepository.cs" />
     <Compile Include="Models\Repositories\MeetingsRepository.cs" />
     <Compile Include="Models\Repositories\Repository.cs" />
     <Compile Include="Models\Repositories\UserManagerRepository.cs" />
+    <Compile Include="Models\ApiViewModels\MeetingTableUserPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

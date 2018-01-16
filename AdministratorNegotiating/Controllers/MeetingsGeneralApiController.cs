@@ -9,7 +9,6 @@ using System.Web.Http.Results;
 
 namespace AdministratorNegotiating.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class MeetingsGeneralApiController : ApiController
     {
         private IUserManagerRepository _udb;
@@ -34,6 +33,36 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new string[] { "error" };
             }
+        }
+
+        [Authorize]
+        public JsonResult<MeetingTableUserPosition[]> Get()
+        {            
+            return Json(_mdb.GetUserListInfo(true));
+            /*Meeting meetingToSave = new Meeting();
+            try
+            {
+                meetingToSave.BeginTime = meeting.BeginTime;
+                meetingToSave.EndTime = meeting.EndTime;
+                meetingToSave.NameOfMeeting = meeting.NameOfMeeting;
+                meetingToSave.DayOfBooking = DateTime.Now;
+                meetingToSave.UserName = meeting.UserName;
+                meetingToSave.Status = Meeting.StatusTypes.Waiting;
+                meetingToSave.MeetingRoomId = meeting.MeetingRoomId;
+                if (_mdb.isAllow(meeting.MeetingRoomId, meeting.BeginTime, meeting.EndTime))
+                {
+                    _mdb.Add(meetingToSave);
+                    return "ok";
+                }
+                else
+                {
+                    throw new Exception("Команата занята или даты некорректны");
+                }
+            }
+            catch (Exception exc)
+            {
+                return exc.Message;
+            }*/
         }
 
         // POST: api/MeetingRoomApi

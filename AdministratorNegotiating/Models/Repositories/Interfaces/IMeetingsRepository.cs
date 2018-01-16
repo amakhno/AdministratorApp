@@ -25,5 +25,6 @@ namespace AdministratorNegotiating.Models.Repositories.Interfaces
         void AddMeetingRoom(MeetingRoom meetingRoom);
         void UpdateMeetingRoom(MeetingRoom meetingRoom);
         void RemoveMeetingRoom(MeetingRoom meetingRoom);
+        MeetingTableUserPosition[] GetUserListInfo(bool innerParam);
     }
 }
