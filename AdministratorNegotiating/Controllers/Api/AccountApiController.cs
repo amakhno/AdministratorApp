@@ -18,11 +18,13 @@ using AdministratorNegotiating.Models;
 using Microsoft.Owin.Security.OAuth;
 using AdministratorNegotiating.Provider;
 using System.Security.Cryptography;
+using System.Web.Http.Cors;
 
 namespace AdministratorNegotiating.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AccountApiController : ApiController
     {
         private const string LocalLoginProvider = "Local";
