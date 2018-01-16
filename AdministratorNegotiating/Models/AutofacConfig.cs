@@ -25,6 +25,7 @@ namespace AdministratorNegotiating.Models
 
             builder.RegisterType<MeetingsRepository>().As<IMeetingsRepository>();
             builder.RegisterType<UserManagerRepository>().As<IUserManagerRepository>();
+            builder.RegisterType<MeetingRoomRepository>().As<IMeetingRoomRepository>();
 
             // Set the dependency resolver to be Autofac.
             var container = builder.Build();

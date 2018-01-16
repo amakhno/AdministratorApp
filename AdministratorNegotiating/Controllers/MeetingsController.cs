@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using AdministratorNegotiating.Models;
 using AdministratorNegotiating.Models.Repositories.Interfaces;
+using AdministratorNegotiating.Models.Repositories;
+using AutoMapper;
 
 namespace AdministratorNegotiating.Controllers
 {
@@ -15,10 +17,12 @@ namespace AdministratorNegotiating.Controllers
     public class MeetingsController : Controller
     {
         readonly IMeetingsRepository _mdb;
+        readonly IMeetingRoomRepository _mrdb;
 
-        public MeetingsController(IMeetingsRepository mdb)
+        public MeetingsController(IMeetingRoomRepository mrdb, IMeetingsRepository mdb)
         {
             _mdb = mdb;
+            _mrdb = mrdb;
         }
 
         // GET: Meetings
@@ -45,7 +49,7 @@ namespace AdministratorNegotiating.Controllers
         // GET: Meetings/Create
         public ActionResult Create()
         {
-            ViewBag.MeetingRoomId = new SelectList(_mdb.GetAllRooms(), "Id", "Name");
+            ViewBag.MeetingRoomId = new SelectList(_mrdb.GetAllRooms(), "Id", "Name");
             return View();
         }
 
@@ -54,7 +58,7 @@ namespace AdministratorNegotiating.Controllers
         // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Meeting meeting)
+        public ActionResult Create(MeetingAdminViewModel meeting)
         {
             meeting.DayOfBooking = DateTime.Now;
             meeting.UserName = User.Identity.Name;
@@ -70,11 +74,13 @@ namespace AdministratorNegotiating.Controllers
 
             if (ModelState.IsValid && isAllowed)
             {
-                _mdb.Add(meeting);
+                Mapper.Initialize(cfg => cfg.CreateMap<MeetingAdminViewModel, Meeting > ());
+                Meeting a = Mapper.Map<MeetingAdminViewModel, Meeting>(meeting);
+                _mdb.Add(a);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.MeetingRoomId = new SelectList(_mdb.GetAllRooms(), "Id", "Name", meeting.MeetingRoomId);
+            ViewBag.MeetingRoomId = new SelectList(_mrdb.GetAllRooms(), "Id", "Name", meeting.MeetingRoomId);
 
             return View(meeting);
         }

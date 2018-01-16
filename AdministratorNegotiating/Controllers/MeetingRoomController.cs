@@ -14,16 +14,18 @@ namespace AdministratorNegotiating.Controllers
     public class MeetingRoomController : Controller
     {
         private IMeetingsRepository _mdb;
+        readonly IMeetingRoomRepository _mrdb;
 
-        public MeetingRoomController(IMeetingsRepository mdb)
+        public MeetingRoomController(IMeetingRoomRepository mrdb, IMeetingsRepository mdb)
         {
             _mdb = mdb;
+            _mrdb = mrdb;
         }
 
         // GET: MeetingRooms
         public ActionResult Index()
         {
-            return View(_mdb.GetAllRooms());
+            return View(_mrdb.GetAllRooms());
         }
 
         // GET: MeetingRooms/Details/5
@@ -33,7 +35,7 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MeetingRoom meetingRoom = _mdb.GetMeetingRoomById((int)id);
+            MeetingRoom meetingRoom = _mrdb.GetMeetingRoomById((int)id);
             if (meetingRoom == null)
             {
                 return HttpNotFound();
@@ -60,7 +62,7 @@ namespace AdministratorNegotiating.Controllers
         {
             if (ModelState.IsValid)
             {
-                _mdb.AddMeetingRoom(meetingRoom);
+                _mrdb.AddMeetingRoom(meetingRoom);
                 return RedirectToAction("Index");
             }
             return View(meetingRoom);
@@ -73,7 +75,7 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MeetingRoom meetingRoom = _mdb.GetMeetingRoomById((int)id);
+            MeetingRoom meetingRoom = _mrdb.GetMeetingRoomById((int)id);
             if (meetingRoom == null)
             {
                 return HttpNotFound();
@@ -90,7 +92,7 @@ namespace AdministratorNegotiating.Controllers
         {
             if (ModelState.IsValid)
             {
-                _mdb.UpdateMeetingRoom(meetingRoom);
+                _mrdb.UpdateMeetingRoom(meetingRoom);
                 return RedirectToAction("Index");
             }
             return View(meetingRoom);
@@ -103,7 +105,7 @@ namespace AdministratorNegotiating.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            MeetingRoom meetingRoom = _mdb.GetMeetingRoomById((int)id);
+            MeetingRoom meetingRoom = _mrdb.GetMeetingRoomById((int)id);
             if (meetingRoom == null)
             {
                 return HttpNotFound();
@@ -120,8 +122,8 @@ namespace AdministratorNegotiating.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            MeetingRoom meetingRoom = _mdb.GetMeetingRoomById(id);
-            _mdb.RemoveMeetingRoom(meetingRoom);
+            MeetingRoom meetingRoom = _mrdb.GetMeetingRoomById(id);
+            _mrdb.RemoveMeetingRoom(meetingRoom, _mdb);
             return RedirectToAction("Index");
         }
     }
