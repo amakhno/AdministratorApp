@@ -235,14 +235,16 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Api\AccountApiController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\MoneyController.cs" />
+    <Compile Include="Controllers\Api\PayMeetingApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginApiController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\MeetingsGeneralApiController.cs" />
+    <Compile Include="Controllers\Api\MeetingsGeneralApiController.cs" />
     <Compile Include="Controllers\MeetingRoomController.cs" />
     <Compile Include="Controllers\MeetingsController.cs" />
-    <Compile Include="Controllers\GetUserMeetingsApiController.cs" />
-    <Compile Include="Controllers\GetMeetingsTimesApiController.cs" />
+    <Compile Include="Controllers\Api\GetUserMeetingsApiController.cs" />
+    <Compile Include="Controllers\Api\GetMeetingsTimesApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -290,17 +292,13 @@
     <Compile Include="Migrations\201711021155528_waiting.Designer.cs">
       <DependentUpon>201711021155528_waiting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711041428063_after.cs" />
-    <Compile Include="Migrations\201711041428063_after.Designer.cs">
-      <DependentUpon>201711041428063_after.cs</DependentUpon>
+    <Compile Include="Migrations\201801170718025_money-added.cs" />
+    <Compile Include="Migrations\201801170718025_money-added.Designer.cs">
+      <DependentUpon>201801170718025_money-added.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711061534411_password.cs" />
-    <Compile Include="Migrations\201711061534411_password.Designer.cs">
-      <DependentUpon>201711061534411_password.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711061537031_passworddeleted.cs" />
-    <Compile Include="Migrations\201711061537031_passworddeleted.Designer.cs">
-      <DependentUpon>201711061537031_passworddeleted.cs</DependentUpon>
+    <Compile Include="Migrations\201801170941594_meeting-price.cs" />
+    <Compile Include="Migrations\201801170941594_meeting-price.Designer.cs">
+      <DependentUpon>201801170941594_meeting-price.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -316,16 +314,20 @@
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Repositories\Interfaces\IMeetingRoomRepository.cs" />
     <Compile Include="Models\Repositories\Interfaces\IMeetingsRepository.cs" />
+    <Compile Include="Models\Repositories\Interfaces\IMoneyRepository.cs" />
     <Compile Include="Models\Repositories\Interfaces\IUserManagerRepository.cs" />
     <Compile Include="Models\Repositories\MeetingRoomRepository.cs" />
     <Compile Include="Models\Repositories\MeetingsRepository.cs" />
+    <Compile Include="Models\Repositories\MoneyRepository.cs" />
     <Compile Include="Models\Repositories\Repository.cs" />
     <Compile Include="Models\Repositories\UserManagerRepository.cs" />
     <Compile Include="Models\ApiViewModels\MeetingTableUserPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Services\CRMService.cs" />
     <Compile Include="Services\MeetingService.cs" />
+    <Compile Include="Services\PayService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -506,14 +508,11 @@
     <EmbeddedResource Include="Migrations\201711021155528_waiting.resx">
       <DependentUpon>201711021155528_waiting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711041428063_after.resx">
-      <DependentUpon>201711041428063_after.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801170718025_money-added.resx">
+      <DependentUpon>201801170718025_money-added.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711061534411_password.resx">
-      <DependentUpon>201711061534411_password.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711061537031_passworddeleted.resx">
-      <DependentUpon>201711061537031_passworddeleted.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201801170941594_meeting-price.resx">
+      <DependentUpon>201801170941594_meeting-price.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

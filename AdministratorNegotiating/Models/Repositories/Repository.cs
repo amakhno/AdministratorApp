@@ -28,13 +28,19 @@ namespace AdministratorNegotiating.Models.Repositories
 
         private void UpdateStatuses(ApplicationDbContext contex)
         {
-                var meetings = contex.Meetings.Where(x => (x.EndTime < DateTime.Now && x.Status != Meeting.StatusTypes.Rejected));
-                foreach (Meeting meeting in meetings)
-                {
-                    meeting.Status = Meeting.StatusTypes.Ended;
-                    contex.Entry(meeting).State = EntityState.Modified;
-                }
-                contex.SaveChanges();
+            var meetings = contex.Meetings.Where(x => (x.EndTime < DateTime.Now && x.Status != Meeting.StatusTypes.Rejected));
+            foreach (Meeting meeting in meetings)
+            {
+                meeting.Status = Meeting.StatusTypes.Ended;
+                contex.Entry(meeting).State = EntityState.Modified;
+            }
+            meetings = contex.Meetings.Where(x => (x.BeginTime < DateTime.Now.AddHours(-1) && (x.Status == Meeting.StatusTypes.Waiting || x.Status == Meeting.StatusTypes.Confirmed)));
+            foreach (Meeting meeting in meetings)
+            {
+                meeting.Status = Meeting.StatusTypes.Rejected;
+                contex.Entry(meeting).State = EntityState.Modified;
+            }
+            contex.SaveChanges();
         }
 
         private void DeleteOldMeetings(ApplicationDbContext contex)

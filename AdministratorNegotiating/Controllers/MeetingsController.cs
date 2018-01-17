@@ -10,6 +10,7 @@ using AdministratorNegotiating.Models;
 using AdministratorNegotiating.Models.Repositories.Interfaces;
 using AdministratorNegotiating.Models.Repositories;
 using AutoMapper;
+using AdministratorNegotiating.Services;
 
 namespace AdministratorNegotiating.Controllers
 {
@@ -18,11 +19,13 @@ namespace AdministratorNegotiating.Controllers
     {
         readonly IMeetingsRepository _mdb;
         readonly IMeetingRoomRepository _mrdb;
+        readonly IMoneyRepository _moneyRepository;
 
-        public MeetingsController(IMeetingRoomRepository mrdb, IMeetingsRepository mdb)
+        public MeetingsController(IMeetingRoomRepository mrdb, IMeetingsRepository mdb, IMoneyRepository moneyRepository)
         {
             _mdb = mdb;
             _mrdb = mrdb;
+            _moneyRepository = moneyRepository;
         }
 
         // GET: Meetings
@@ -73,8 +76,7 @@ namespace AdministratorNegotiating.Controllers
             }
 
             if (ModelState.IsValid && isAllowed)
-            {
-                Mapper.Initialize(cfg => cfg.CreateMap<MeetingAdminViewModel, Meeting > ());
+            {                
                 Meeting a = Mapper.Map<MeetingAdminViewModel, Meeting>(meeting);
                 _mdb.Add(a);
                 return RedirectToAction("Index");
@@ -123,7 +125,8 @@ namespace AdministratorNegotiating.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            _mdb.DeleteById(id);
+            MeetingService service = new MeetingService(_moneyRepository,_mdb);
+            service.Delete(id);
             return PartialView("TablesPartial");
         }
 

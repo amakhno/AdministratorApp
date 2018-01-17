@@ -13,6 +13,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Http;
+using AutoMapper;
 
 namespace AdministratorNegotiating
 {
@@ -20,7 +21,12 @@ namespace AdministratorNegotiating
     {
         protected void Application_Start()
         {
-            AdministratorNegotiating.Models.AutofacConfig.ConfigureContainer();
+            AutofacConfig.ConfigureContainer();
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<MeetingAddViewModel, Meeting>();
+                cfg.CreateMap<MeetingAdminViewModel, Meeting>();
+            });
 
             InitializeDatabase(new Models.ApplicationDbContext());
             GlobalConfiguration.Configure(WebApiConfig.Register);

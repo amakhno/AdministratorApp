@@ -85,5 +85,36 @@ namespace AdministratorNegotiating.Models.Repositories
                 context.SaveChanges();
             });
         }
+
+        public MeetingTableUserPosition[] GetUserListInfo(bool json)
+        {
+            List<MeetingTableUserPosition> stringResult = new List<MeetingTableUserPosition>();
+            RunWithUpdateStatuses(context =>
+            {
+                var result = context.MeetingRooms.ToArray();
+                foreach (MeetingRoom mr in result)
+                {
+                    MeetingTableUserPosition position = new MeetingTableUserPosition();
+                    position.Id = mr.Id;
+                    position.Name = mr.Name;
+                    position.CountOfChairs = mr.CountOfChairs;
+                    position.IsProjector = mr.IsProjector;
+                    position.IsBoard = mr.IsBoard;
+                    if (context.Meetings.Where(x => x.MeetingRoomId == mr.Id).Where(x => x.Status != Meeting.StatusTypes.Ended)
+                        .Where(x => x.Status != Meeting.StatusTypes.Rejected)
+                        .Count() == 0)
+                    {
+                        position.firstMeetingDate = DateTime.MinValue;
+                    }
+                    else
+                    {
+                        position.firstMeetingDate = (context.Meetings.Where(x => x.MeetingRoomId == mr.Id).Where(x => x.Status != Meeting.StatusTypes.Ended)
+                        .Where(x => x.Status != Meeting.StatusTypes.Rejected).Min(x => x.BeginTime));
+                    }
+                    stringResult.Add(position);
+                }
+            });
+            return stringResult.ToArray();
+        }
     }
 }

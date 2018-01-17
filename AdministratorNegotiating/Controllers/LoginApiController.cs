@@ -13,6 +13,7 @@ namespace AdministratorNegotiating.Controllers
         public LoginApiController(IUserManagerRepository mdb)
         {
             _udb = mdb;
+            
         }
 
         [System.Web.Http.AcceptVerbs("GET", "POST")]

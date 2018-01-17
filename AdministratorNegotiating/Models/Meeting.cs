@@ -10,15 +10,15 @@ namespace AdministratorNegotiating.Models
 {
     public class Meeting
     {
-        public int Id { get;  set; }
+        public int Id { get; set; }
 
         [DisplayName("Дата бронирования")]
-        public DateTime DayOfBooking { get;  set; }
+        public DateTime DayOfBooking { get; set; }
 
         [Required(ErrorMessage = "Требуется название встречи")]
         [MaxLength(50, ErrorMessage = "Длинна строки должна быть не более 50"), MinLength(3)]
         [DisplayName("Название встречи")]
-        public string NameOfMeeting { get;  set; }
+        public string NameOfMeeting { get; set; }
 
         [Required(ErrorMessage = "Требуется указать качало встречи")]
         [DisplayName("Начало")]
@@ -95,11 +95,14 @@ namespace AdministratorNegotiating.Models
         public StatusTypes Status { get; set; }
 
         public enum StatusTypes
-        { 
-            Confirmed, 
+        {
+            Confirmed,
             Rejected,
             Ended,
-            Waiting
+            Waiting,
+            Paid
         }
+
+        public int Price { get; set; }
     }
 }

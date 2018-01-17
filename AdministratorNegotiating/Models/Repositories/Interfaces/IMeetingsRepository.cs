@@ -19,8 +19,7 @@ namespace AdministratorNegotiating.Models.Repositories.Interfaces
         void Add(Meeting meeting);
         string[] GetTimeInfo(int id);
         string[] GetByUserName(string username);
-        MeetingTableUserPosition[] GetUserListInfo(bool json);
-        string[] GetUserListInfo();
         void DeleteAllMeetingsWithRoom(int roomId);
+        void Pay(int meetingRoomId);
     }
 }

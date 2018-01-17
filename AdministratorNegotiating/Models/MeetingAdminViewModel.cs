@@ -42,7 +42,8 @@ namespace AdministratorNegotiating.Models
             Confirmed,
             Rejected,
             Ended,
-            Waiting
+            Waiting,
+            Paid
         }
     }
 }
